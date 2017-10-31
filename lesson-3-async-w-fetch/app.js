@@ -2,7 +2,7 @@
     const form = document.querySelector('#search-form');
     const searchField = document.querySelector('#search-keyword');
     const responseContainer = document.querySelector('#response-container');
-    const appid = '72edb3e6540e522d1fff7cf6cac4b522d657d63be6c99a5de717a11f5a619442';
+    const appid = '';
     const requestHeaders = new Headers();
     let searchedForText;
 
