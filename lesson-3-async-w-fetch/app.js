@@ -2,7 +2,8 @@
     const form = document.querySelector('#search-form');
     const searchField = document.querySelector('#search-keyword');
     const responseContainer = document.querySelector('#response-container');
-    const appid = '';
+    const appid = '72edb3e6540e522d1fff7cf6cac4b522d657d63be6c99a5de717a11f5a619442';
+    const nytKey = '1b8ad75b08d7499ab6862418e9cc2c3a';
     const requestHeaders = new Headers();
     let searchedForText;
 
@@ -17,6 +18,10 @@
         }).then(response => response.json())
         .then(addImage)
         .catch(e => requestError(e, 'image'));
+
+        fetch(`http://api.nytimes.com/svc/search/v2/articlesearch.json?q=${searchedForText}&api-key=${nytKey}`)
+            .then(addArticles)
+            .catch(e => requestError(e, 'article'))
     });
 
     
@@ -41,4 +46,20 @@
         console.log(e);
         responseContainer.insertAdjacentHTML('beforeend', `<p class="network-warning">Oh no! There was an error making a request for the ${part}.</p>`);
     }
+
+    function addArticles () {
+        let htmlContent = '';
+        const articles = data.response.docs;
+        
+       if (data.response && data.response.docs && data.response.docs.length > 1) {
+           htmlContent = `<ul>${articles.map(article => `<li class="article">
+            <h2><a href="${article.web_url}">${article.headline.main}</a></h2>
+            <p>${article.snippet}</p>
+           </li>`).join('')}</ul>`;
+       } else {
+           htmlContent = '<div class = "error-no-articles">No articles available.</div>';
+       }
+
+       responseContainer.insertAdjacentHTML('beforeend', htmlContent);
+    };
 })();
